@@ -1,0 +1,32 @@
+#!/bin/sh
+
+setterm -blank 0
+
+chmod 755 /
+
+/debootstrap/debootstrap --second-stage
+echo "debootstrap done."
+rm /var/cache/apt/archives/*.deb
+
+echo -n "bento overlay installing..."
+cd /
+tar zxf /tmp/bootstrap_delta.tar.gz
+rm /tmp/bootstrap_delta.tar.gz
+depmod -a
+
+passwd -d root
+echo "done."
+
+rm -f /bootstrap.init
+sync
+
+if [ -e /tmp/boot_me ]; then
+    rm /tmp/boot_me
+    echo "booting into your new setup."
+    exec /sbin/init
+else
+    echo "done, please power me off."
+    sleep 5
+    mount -t sysfs sysfs /sys
+    halt -d -f -p
+fi

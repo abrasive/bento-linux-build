@@ -1,0 +1,3 @@
+[submodule "kernel_wm8505"]
+	path = kernel_wm8505
+	url = https://github.com/projectgus/kernel_wm8505.git
